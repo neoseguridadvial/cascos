@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foro de Actualización Regulatoria - Redipi</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+        }
+
+        /* Paleta de Colores REDIPI extraída del logo */
+        .brand-blue { color: #63C5EA; }
+        .bg-brand-blue { background-color: #63C5EA; }
+        .brand-green { color: #A3CD39; }
+        .bg-brand-green { background-color: #A3CD39; }
+        .brand-purple { color: #96169A; }
+        .bg-brand-purple { background-color: #96169A; }
+        .brand-orange { color: #E27E2E; }
+        .bg-brand-orange { background-color: #E27E2E; }
+        .brand-yellow { color: #EEDC45; }
+        .bg-brand-yellow { background-color: #EEDC45; }
+        .brand-violet { color: #4B177F; }
+        .bg-brand-violet { background-color: #4B177F; }
+
+        /* Estilos para Flip Cards */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .group:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .flip-card-front {
+            background-color: white;
+            color: #000000;
+            border: 1px solid #edf2f7;
+        }
+        
+        .flip-card-back {
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        /* Títulos con sombra para legibilidad extrema */
+        .text-hero-shadow {
+            text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.5);
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body class="text-gray-900 antialiased bg-white">
+
+    <!-- SECCIÓN 1: ENCABEZADO -->
+    <header class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100">
+        <div class="container mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center mb-4 md:mb-0">
+                <img src="https://imgur.com/r9YfuvC.png" alt="Logo Redipi" class="h-16 md:h-20 object-contain hover:scale-105 transition-transform duration-300">
+            </div>
+            <!-- Título del Evento - NEGRO para contraste -->
+            <div class="text-center md:text-right">
+                <h1 class="text-2xl md:text-3xl font-black text-black tracking-tight leading-none">
+                    Foro de Actualización Regulatoria
+                </h1>
+                <div class="flex items-center justify-center md:justify-end gap-1 mt-2">
+                    <span class="h-2 w-2 rounded-full bg-brand-blue"></span>
+                    <span class="h-2 w-2 rounded-full bg-brand-green"></span>
+                    <span class="h-2 w-2 rounded-full bg-brand-purple"></span>
+                    <span class="h-2 w-2 rounded-full bg-brand-orange"></span>
+                    <p class="text-sm md:text-base font-bold text-gray-800 ml-2">
+                        Cascos de Motociclistas y Focal Group
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION - Corregido contraste del título -->
+    <section class="py-24 relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <!-- Manchas de color de fondo inspiradas en el logo -->
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-brand-blue rounded-full opacity-10 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-brand-orange rounded-full opacity-10 blur-3xl"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-brand-green opacity-5 blur-3xl rounded-full"></div>
+
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <!-- TÍTULO EN NEGRO CON SOMBRA SUAVE PARA QUE SE VEA PERFECTO -->
+            <h2 class="text-5xl md:text-7xl font-black text-black mb-6 tracking-tighter text-hero-shadow">
+                Centro de Conocimiento
+            </h2>
+            <p class="text-lg md:text-xl text-gray-700 max-w-2xl mx-auto font-semibold leading-relaxed">
+                Seguridad vial, normativa técnica y articulación estratégica para el sector.
+            </p>
+            <div class="mt-10 flex justify-center gap-4">
+                <div class="h-1.5 w-12 bg-brand-blue rounded-full"></div>
+                <div class="h-1.5 w-12 bg-brand-green rounded-full"></div>
+                <div class="h-1.5 w-12 bg-brand-purple rounded-full"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 2: RECURSOS -->
+    <section class="py-20 container mx-auto px-6">
+        <div class="flex items-center mb-12 justify-center md:justify-start">
+            <div class="h-10 w-2 bg-black mr-4 rounded-full"></div>
+            <h3 class="text-3xl font-black text-black">Material de Consulta</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Card 1 - Azul -->
+            <div class="group bg-white rounded-3xl shadow-xl hover:shadow-2xl transition duration-500 border-b-8 border-brand-blue fade-in-up" style="animation-delay: 0.1s;">
+                <div class="p-10 flex flex-col items-center text-center">
+                    <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-brand-blue transition-all duration-300 transform group-hover:rotate-12">
+                        <i class="fas fa-play text-2xl brand-blue group-hover:text-white"></i>
+                    </div>
+                    <h4 class="text-xl font-black text-black mb-2">Video Explicativo</h4>
+                    <p class="text-gray-500 text-sm font-medium">Contexto y objetivos estratégicos del foro.</p>
+                </div>
+            </div>
+
+            <!-- Card 2 - Verde -->
+            <div class="group bg-white rounded-3xl shadow-xl hover:shadow-2xl transition duration-500 border-b-8 border-brand-green fade-in-up" style="animation-delay: 0.2s;">
+                <div class="p-10 flex flex-col items-center text-center">
+                    <div class="w-16 h-16 bg-lime-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-brand-green transition-all duration-300 transform group-hover:rotate-12">
+                        <i class="fas fa-file-contract text-2xl brand-green group-hover:text-white"></i>
+                    </div>
+                    <h4 class="text-xl font-black text-black mb-2">Resolución 1080</h4>
+                    <p class="text-gray-500 text-sm font-medium">Consulta el reglamento técnico de cascos.</p>
+                </div>
+            </div>
+
+            <!-- Card 3 - Morado -->
+            <div class="group bg-white rounded-3xl shadow-xl hover:shadow-2xl transition duration-500 border-b-8 border-brand-purple fade-in-up" style="animation-delay: 0.3s;">
+                <div class="p-10 flex flex-col items-center text-center">
+                    <div class="w-16 h-16 bg-purple-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-brand-purple transition-all duration-300 transform group-hover:rotate-12">
+                        <i class="fas fa-book-open text-2xl brand-purple group-hover:text-white"></i>
+                    </div>
+                    <h4 class="text-xl font-black text-black mb-2">NTC 4533</h4>
+                    <p class="text-gray-500 text-sm font-medium">Norma técnica y sus requisitos de seguridad.</p>
+                </div>
+            </div>
+
+            <!-- Card 4 - Naranja -->
+            <div class="group bg-white rounded-3xl shadow-xl hover:shadow-2xl transition duration-500 border-b-8 border-brand-orange fade-in-up" style="animation-delay: 0.4s;">
+                <div class="p-10 flex flex-col items-center text-center">
+                    <div class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-brand-orange transition-all duration-300 transform group-hover:rotate-12">
+                        <i class="fas fa-sitemap text-2xl brand-orange group-hover:text-white"></i>
+                    </div>
+                    <h4 class="text-xl font-black text-black mb-2">Mapa de Actores</h4>
+                    <p class="text-gray-500 text-sm font-medium">Relación de todos los actores del sector.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 3: ENCUESTAS (MULTICOLOR) -->
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h3 class="text-4xl font-black text-black">Encuestas por Sector</h3>
+                <p class="text-gray-700 mt-4 max-w-2xl mx-auto text-lg font-medium">Selecciona tu perfil y participa. <span class="brand-purple">Interactúa con las tarjetas</span> para más información.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+                <!-- 1. Entidades Nacionales (Morado) -->
+                <div class="group h-80 perspective-1000 cursor-pointer">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <i class="fas fa-landmark text-5xl brand-purple mb-6"></i>
+                            <h4 class="text-xl font-black text-black">Entidades Nacionales</h4>
+                        </div>
+                        <div class="flip-card-back bg-brand-purple">
+                            <p class="text-sm font-bold mb-4 px-4 text-center">Entidades del orden nacional con competencia en seguridad vial, regulación técnica, transporte y control de mercado.</p>
+                            <a href="https://ee.kobotoolbox.org/x/EZyItXN1" target="_blank" class="bg-white text-purple-900 font-black py-2.5 px-8 rounded-full shadow-lg hover:scale-105 transition">Participar</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Entidades Territoriales (Azul) -->
+                <div class="group h-80 perspective-1000 cursor-pointer">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <i class="fas fa-map-marked-alt text-5xl brand-blue mb-6"></i>
+                            <h4 class="text-xl font-black text-black">Entidades Territoriales</h4>
+                        </div>
+                        <div class="flip-card-back bg-brand-blue">
+                            <p class="text-sm font-bold mb-4 px-4 text-center">Gobernaciones, alcaldías, secretarías de movilidad y tránsito, y autoridades locales.</p>
+                            <a href="https://ee.kobotoolbox.org/x/5zTQwWSi" target="_blank" class="bg-white text-blue-900 font-black py-2.5 px-8 rounded-full shadow-lg hover:scale-105 transition">Participar</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Agremiaciones (Naranja) -->
+                <div class="group h-80 perspective-1000 cursor-pointer">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <i class="fas fa-users text-5xl brand-orange mb-6"></i>
+                            <h4 class="text-xl font-black text-black">Agremiaciones</h4>
+                        </div>
+                        <div class="flip-card-back bg-brand-orange">
+                            <p class="text-sm font-bold mb-4 px-4 text-center">Asociaciones, cámaras, gremios y organizaciones que representan fabricantes, importadores, comercializadores o usuarios.</p>
+                            <a href="https://ee.kobotoolbox.org/x/hsvPeUNt" target="_blank" class="bg-white text-orange-900 font-black py-2.5 px-8 rounded-full shadow-lg hover:scale-105 transition">Participar</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Certificación (Amarillo) -->
+                <div class="group h-80 perspective-1000 cursor-pointer">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <i class="fas fa-check-circle text-5xl brand-yellow mb-6"></i>
+                            <h4 class="text-xl font-black text-black">Organismos de Certificación</h4>
+                        </div>
+                        <div class="flip-card-back bg-brand-yellow">
+                            <p class="text-sm font-bold mb-4 px-4 text-center text-black">Organismos acreditados o no acreditados que realizan certificación de conformidad.</p>
+                            <a href="https://ee.kobotoolbox.org/x/G0ZfBSXJ" target="_blank" class="bg-black text-white font-black py-2.5 px-8 rounded-full shadow-lg hover:scale-105 transition">Participar</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Laboratorios (Verde) -->
+                <div class="group h-80 perspective-1000 cursor-pointer">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <i class="fas fa-microscope text-5xl brand-green mb-6"></i>
+                            <h4 class="text-xl font-black text-black">Laboratorios</h4>
+                        </div>
+                        <div class="flip-card-back bg-brand-green">
+                            <p class="text-sm font-bold mb-4 px-4 text-center">Laboratorios de ensayo acreditados y no acreditados que realizan pruebas sobre cascos.</p>
+                            <a href="https://ee.kobotoolbox.org/x/gIWlOvnx" target="_blank" class="bg-white text-green-900 font-black py-2.5 px-8 rounded-full shadow-lg hover:scale-105 transition">Participar</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Fabricantes (Violeta Oscuro) -->
+                <div class="group h-80 perspective-1000 cursor-pointer">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <i class="fas fa-tools text-5xl brand-violet mb-6"></i>
+                            <h4 class="text-xl font-black text-black">Fabricantes</h4>
+                        </div>
+                        <div class="flip-card-back bg-brand-violet">
+                            <p class="text-sm font-bold mb-4 px-4 text-center">Empresas nacionales productoras de cascos para motociclistas.</p>
+                            <a href="https://ee.kobotoolbox.org/x/UPtDJDgc" target="_blank" class="bg-white text-purple-900 font-black py-2.5 px-8 rounded-full shadow-lg hover:scale-105 transition">Participar</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Importadores (Cyan) -->
+                <div class="group h-80 perspective-1000 cursor-pointer">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <i class="fas fa-ship text-5xl text-cyan-500 mb-6"></i>
+                            <h4 class="text-xl font-black text-black">Importadores</h4>
+                        </div>
+                        <div class="flip-card-back bg-cyan-500">
+                            <p class="text-sm font-bold mb-4 px-4 text-center">Empresas importadoras de cascos para motociclistas.</p>
+                            <a href="https://ee.kobotoolbox.org/x/OWANjA7O" target="_blank" class="bg-white text-cyan-900 font-black py-2.5 px-8 rounded-full shadow-lg hover:scale-105 transition">Participar</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. Motociclistas (Rosa) -->
+                <div class="group h-80 perspective-1000 cursor-pointer">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <i class="fas fa-helmet-safety text-5xl text-pink-500 mb-6"></i>
+                            <h4 class="text-xl font-black text-black">Motociclistas</h4>
+                        </div>
+                        <div class="flip-card-back bg-pink-500">
+                            <p class="text-sm font-bold mb-4 px-4 text-center">Tu seguridad es nuestra prioridad. Queremos oírte.</p>
+                            <a href="#" class="bg-white text-pink-900 font-black py-2.5 px-8 rounded-full shadow-lg hover:scale-105 transition">Participar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 4: FORMULARIO -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto rounded-3xl shadow-2xl overflow-hidden border border-gray-100 bg-white">
+                <div class="bg-black py-10 px-12 text-center md:text-left">
+                    <h3 class="text-3xl font-black text-white">Únete a la Red</h3>
+                    <p class="text-gray-400 mt-2 font-medium">Recibe las actualizaciones y resultados del focal group.</p>
+                </div>
+                
+                <form class="p-12 space-y-8" onsubmit="event.preventDefault(); alert('Gracias por tu interés.');">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div>
+                            <label class="block text-black text-xs font-black uppercase tracking-widest mb-3" for="nombre">Nombre Completo</label>
+                            <input class="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-black focus:bg-white focus:outline-none transition duration-300" id="nombre" type="text" placeholder="Tu nombre" required>
+                        </div>
+                        <div>
+                            <label class="block text-black text-xs font-black uppercase tracking-widest mb-3" for="email">Correo Electrónico</label>
+                            <input class="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-black focus:bg-white focus:outline-none transition duration-300" id="email" type="email" placeholder="email@ejemplo.com" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-black text-xs font-black uppercase tracking-widest mb-3" for="entidad">Entidad / Empresa</label>
+                        <input class="w-full px-5 py-4 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-black focus:bg-white focus:outline-none transition duration-300" id="entidad" type="text" placeholder="Nombre de la institución">
+                    </div>
+                    <div class="text-center pt-6">
+                        <button class="w-full md:w-auto bg-black hover:bg-gray-800 text-white font-black py-5 px-20 rounded-2xl shadow-2xl transition transform hover:scale-105 active:scale-95" type="submit">
+                            ENVIAR REGISTRO
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="bg-black text-white py-16">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center border-b border-gray-800 pb-12 mb-12">
+                <div class="text-center md:text-left mb-8 md:mb-0">
+                    <h4 class="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-brand-blue via-brand-green to-brand-orange">REDIPI</h4>
+                    <p class="text-gray-500 font-bold mt-2">Red de instituciones para la innovación</p>
+                </div>
+                <div class="flex space-x-8">
+                    <a href="#" class="text-gray-400 hover:text-brand-blue transition text-2xl"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-brand-green transition text-2xl"><i class="fas fa-globe"></i></a>
+                </div>
+            </div>
+            <div class="text-center text-gray-600 text-sm font-medium">
+                <p>&copy; 2024 REDIPI. Todos los derechos reservados.</p>
+                <p class="mt-2 uppercase tracking-tighter opacity-50">Actualización Regulatoria - Cascos de Motociclistas</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
