@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica de Casos de Campo - ANSV Cascos de Motociclistas</title>
+    <!-- Tailwind CSS para diseño moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter para alta legibilidad -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons para simbología de campo y seguridad vial -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti para celebración de aciertos -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .font-serif-title {
+            font-family: 'Playfair Display', serif;
+        }
+        .progress-bar-transition {
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-card {
+                box-shadow: none !important;
+                border: 3px double #0f172a !important;
+                background: white !important;
+                color: #000 !important;
+            }
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col text-slate-800 antialiased overflow-x-hidden">
+
+    <!-- Header de la Aplicación -->
+    <header class="bg-gradient-to-r from-slate-900 via-slate-850 to-teal-950 text-white shadow-lg no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-white/10 rounded-xl backdrop-blur-md border border-white/20">
+                    <i data-lucide="shield-check" class="h-7 w-7 text-teal-400"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight flex items-center gap-2">
+                        <span>ANSV • Estudio de Cascos de Motociclistas</span>
+                    </h1>
+                    <p class="text-xs text-teal-300 font-medium">Clínica de Casos de Campo & Validación de Idoneidad Operativa</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div id="active-user-badge" class="hidden items-center space-x-2 bg-teal-950/50 px-3 py-1.5 rounded-lg border border-teal-500/30 text-xs">
+                    <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+                    <span id="badge-username" class="font-semibold text-slate-100">Invitado</span>
+                </div>
+                <button onclick="resetToWelcome()" class="text-xs font-semibold bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg transition border border-white/10 flex items-center space-x-1">
+                    <i data-lucide="home" class="w-3.5 h-3.5"></i>
+                    <span>Inicio</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="flex-grow flex flex-col max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- SECCIÓN 1: BIENVENIDA Y CONFIGURACIÓN -->
+        <section id="welcome-screen" class="flex-grow flex flex-col justify-center py-4">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200/60 p-6 sm:p-10 max-w-4xl mx-auto w-full transition duration-300">
+                <div class="text-center max-w-2xl mx-auto mb-8">
+                    <span class="bg-teal-100 text-teal-900 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Alineado a Guía Operativa V1 · Abril de 2026</span>
+                    <h2 class="text-2xl sm:text-3.5xl font-extrabold text-slate-900 mt-3 mb-4 leading-tight font-serif-title">
+                        Entrenamiento de Consentimiento, Abordaje y Novedades de Campo
+                    </h2>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Este simulador interactivo evalúa el criterio metodológico, ético y de seguridad de los tres roles del operativo conforme a los lineamientos del documento técnico <strong>01_Guia_consentimiento_abordaje_manejo_novedades</strong>. Toma decisiones bajo los criterios de no negociación y gestión de campo.
+                    </p>
+                </div>
+
+                <!-- Selección de Perfil/Registro -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch mb-8">
+                    <div class="md:col-span-5 bg-slate-50 p-6 rounded-2xl border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center space-x-2">
+                                <i data-lucide="user-cog" class="text-teal-600 w-5 h-5"></i>
+                                <span>Registro de Analista</span>
+                            </h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Nombre Completo</label>
+                                    <input type="text" id="user-name-input" placeholder="Nombre para acreditación" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition shadow-sm outline-none text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">Código de Campo / ID</label>
+                                    <input type="text" id="user-id-input" placeholder="Ej: CO-CASCOS-ANSV" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition shadow-sm outline-none text-sm">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-200 text-[11px] text-slate-500 flex items-start space-x-2">
+                            <i data-lucide="info" class="w-4 h-4 text-teal-600 shrink-0 mt-0.5"></i>
+                            <span>Toda novedad de campo (cualitativa o cuantitativa) debe quedar documentada y reportada en las planillas oficiales.</span>
+                        </div>
+                    </div>
+
+                    <!-- Modos de Aplicación -->
+                    <div class="md:col-span-7 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center space-x-2">
+                                <i data-lucide="sliders" class="text-teal-600 w-5 h-5"></i>
+                                <span>Ruta Metodológica</span>
+                            </h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- Modo Entrenamiento -->
+                                <button type="button" onclick="selectMode('training')" id="mode-btn-training" class="relative text-left p-4 rounded-2xl border-2 border-teal-600 bg-teal-50/50 hover:bg-teal-50 transition group flex flex-col justify-between min-h-[9.5rem] h-auto">
+                                    <div>
+                                        <div class="flex justify-between items-start mb-2">
+                                            <span class="p-1.5 bg-teal-100 text-teal-800 rounded-lg"><i data-lucide="graduation-cap" class="w-4 h-4"></i></span>
+                                            <span class="text-[9px] font-bold bg-teal-600 text-white px-2 py-0.5 rounded-md uppercase tracking-wider">Práctica</span>
+                                        </div>
+                                        <h4 class="font-bold text-slate-900 text-xs">Clínica Guiada</h4>
+                                        <p class="text-[11px] text-slate-600 mt-1 leading-relaxed">Incluye retroalimentación inmediata en ventana emergente, confeti al acertar y pistas técnicas.</p>
+                                    </div>
+                                    <span class="text-[11px] text-teal-700 font-bold flex items-center mt-2" id="training-status">Seleccionado <i data-lucide="check-circle-2" class="w-3.5 h-3.5 ml-1"></i></span>
+                                </button>
+
+                                <!-- Modo Evaluativo -->
+                                <button type="button" onclick="selectMode('evaluation')" id="mode-btn-evaluation" class="relative text-left p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-teal-600 hover:bg-slate-50/50 transition group flex flex-col justify-between min-h-[9.5rem] h-auto">
+                                    <div>
+                                        <div class="flex justify-between items-start mb-2">
+                                            <span class="p-1.5 bg-slate-100 text-slate-700 rounded-lg"><i data-lucide="award" class="w-4 h-4"></i></span>
+                                            <span class="text-[9px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md uppercase tracking-wider">Certificable</span>
+                                        </div>
+                                        <h4 class="font-bold text-slate-900 text-xs">Evaluación de Campo</h4>
+                                        <p class="text-[11px] text-slate-600 mt-1 leading-relaxed">Sin pistas ni confirmación de respuestas durante la prueba. Aprobación mínima del 80%.</p>
+                                    </div>
+                                    <span class="text-[11px] text-slate-400 font-medium flex items-center mt-2" id="evaluation-status-btn-text">Iniciar Examen <i data-lucide="arrow-right" class="w-3.5 h-3.5 ml-1"></i></span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Filtro de Roles -->
+                        <div class="mt-4">
+                            <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Selecciona obligatoriamente tu Rol en el Operativo:</span>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="selectRoleFilter('coordinador')" id="role-filter-coordinador" class="py-1.5 text-[10px] font-bold rounded-lg border border-slate-200 text-slate-600 bg-white hover:bg-slate-50 transition">Coordinador</button>
+                                <button onclick="selectRoleFilter('encuestador')" id="role-filter-encuestador" class="py-1.5 text-[10px] font-bold rounded-lg border border-slate-200 text-slate-600 bg-white hover:bg-slate-50 transition">Encuestador</button>
+                                <button onclick="selectRoleFilter('cualitativo')" id="role-filter-cualitativo" class="py-1.5 text-[10px] font-bold rounded-lg border border-slate-200 text-slate-600 bg-white hover:bg-slate-50 transition">Cualitativo</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botón de Inicio de Simulación -->
+                <div class="border-t border-slate-200 pt-6 flex justify-end">
+                    <button onclick="startSimulation()" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-slate-900 to-teal-850 hover:from-slate-950 hover:to-teal-900 text-white font-bold rounded-xl transition shadow-lg flex items-center justify-center space-x-2 text-sm">
+                        <span>Iniciar Clínica de Casos</span>
+                        <i data-lucide="play" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: RUNNER DE CASOS CLÍNICOS -->
+        <section id="case-runner-screen" class="hidden flex-grow flex-col">
+            <!-- Barra superior de estado -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center space-x-3 w-full md:w-auto">
+                    <div id="case-role-icon-container" class="p-2.5 bg-teal-50 rounded-xl text-teal-700 shrink-0">
+                        <i data-lucide="users" id="runner-role-icon" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2 flex-wrap gap-1">
+                            <span id="runner-case-role" class="text-[10px] font-bold uppercase tracking-wider text-teal-800">Rol del Caso</span>
+                            <span id="runner-case-category" class="text-[9px] font-extrabold uppercase bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full">Metodología</span>
+                        </div>
+                        <h3 id="runner-case-title" class="font-bold text-slate-900 text-sm sm:text-base leading-tight mt-0.5">Título del Caso</h3>
+                    </div>
+                </div>
+
+                <!-- Progreso y Puntaje -->
+                <div class="flex items-center justify-between md:justify-end gap-6 w-full md:w-auto border-t md:border-t-0 pt-3 md:pt-0">
+                    <div class="w-full md:w-40">
+                        <div class="flex justify-between items-center text-[10px] text-slate-500 mb-1">
+                            <span>Progreso de Sesión</span>
+                            <span id="runner-progress-text" class="font-bold text-slate-700">Caso 1/10</span>
+                        </div>
+                        <div class="w-full bg-slate-200 rounded-full h-1.5">
+                            <div id="runner-progress-bar" class="bg-teal-600 h-1.5 rounded-full progress-bar-transition" style="width: 10%"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2 bg-slate-100/80 px-3 py-1.5 rounded-xl border border-slate-200 text-xs">
+                        <i data-lucide="award" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+                        <span class="font-semibold text-slate-500">Puntaje:</span>
+                        <span id="runner-total-score" class="font-bold text-slate-900">0 pts</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel de Contenido de Caso (Dos Columnas) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start flex-grow">
+                <!-- Columna Izquierda: Escenario / Contexto -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 flex flex-col justify-between min-h-[300px] h-auto">
+                        <div>
+                            <div class="flex justify-between items-center mb-4">
+                                <div class="flex items-center space-x-1.5 text-xs text-slate-500 font-medium">
+                                    <i data-lucide="map-pin" class="w-4 h-4 text-teal-600"></i>
+                                    <span>Situación Operativa #<span id="runner-case-num">1</span></span>
+                                </div>
+                                <span id="runner-difficulty-badge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Dificultad</span>
+                            </div>
+                            
+                            <!-- ILUSTRACIÓN / IMAGEN DEL CASO -->
+                            <div class="mb-5 bg-slate-50 border border-slate-200 rounded-xl p-4 flex justify-center items-center h-44 overflow-hidden">
+                                <div id="illustration-container" class="w-full h-full flex justify-center items-center">
+                                    <!-- Inyectado dinámicamente en SVG de alta fidelidad -->
+                                </div>
+                            </div>
+
+                            <!-- Descripción de la situación -->
+                            <div id="runner-case-scenario" class="text-slate-700 text-sm sm:text-base leading-relaxed space-y-4 mb-6">
+                                <!-- Se inyecta dinámicamente -->
+                            </div>
+                        </div>
+
+                        <!-- Tip de Capacitación (Pistas/Anexos de la Guía) -->
+                        <div id="annex-tip-container" class="bg-teal-50/70 border border-teal-100 rounded-xl p-4 flex items-start space-x-3 mt-4">
+                            <div class="p-1 bg-teal-100 rounded text-teal-800 shrink-0">
+                                <i data-lucide="book-open" class="w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-[10px] font-bold text-teal-900 uppercase tracking-wider">Referencia Técnica: 01_Guia_consentimiento_abordaje_manejo_novedades</h4>
+                                <p id="runner-case-tip" class="text-xs text-teal-800 mt-1 leading-relaxed">Guía técnica o estándar regulatorio para la toma de decisión.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha: Opciones y Decisiones -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6">
+                        <h4 class="font-bold text-slate-900 text-xs mb-4 uppercase tracking-wider text-slate-500 flex items-center space-x-2">
+                            <i data-lucide="shield-alert" class="w-4 h-4 text-teal-600"></i>
+                            <span>¿Cuál es el protocolo de acción correcto?</span>
+                        </h4>
+
+                        <!-- Contenedor de Opciones -->
+                        <div id="options-container" class="space-y-3">
+                            <!-- Inyectadas dinámicamente -->
+                        </div>
+
+                        <!-- Botonera de Acción de Navegación -->
+                        <div class="mt-6 pt-6 border-t border-slate-200 flex justify-between items-center">
+                            <button id="prev-case-btn" onclick="goToPrevCase()" class="flex items-center space-x-1.5 text-xs font-bold text-slate-500 hover:text-slate-900 transition py-2 px-3 bg-slate-100 hover:bg-slate-200 rounded-lg">
+                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                                <span>Caso Anterior</span>
+                            </button>
+                            <button id="action-case-btn" onclick="submitCaseDecision()" class="flex items-center space-x-2 text-xs sm:text-sm font-bold bg-teal-800 hover:bg-teal-950 text-white py-2.5 px-5 rounded-lg shadow transition">
+                                <span>Confirmar Acción</span>
+                                <i data-lucide="check" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: TABLERO DE RESULTADOS Y DIAGNÓSTICO -->
+        <section id="results-screen" class="hidden flex-grow flex-col">
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-xl p-6 sm:p-10 max-w-5xl mx-auto w-full">
+                <!-- Encabezado de Resultados -->
+                <div class="text-center max-w-2xl mx-auto mb-8">
+                    <span class="bg-teal-100 text-teal-800 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">Diagnóstico de Desempeño Técnico</span>
+                    <h2 class="text-2xl sm:text-3.5xl font-extrabold text-slate-900 mt-3 mb-2 font-serif-title">Resultado de Evaluación de Campo</h2>
+                    <p class="text-xs sm:text-sm text-slate-600">Porcentaje de idoneidad ética, metodológica y operativa conforme a las exigencias de la ANSV.</p>
+                </div>
+
+                <!-- Resumen de Métricas de Campo -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center border-b border-slate-200 pb-8 mb-8">
+                    <!-- Medidor Circular de Éxito -->
+                    <div class="md:col-span-4 flex flex-col items-center justify-center text-center">
+                        <div class="relative w-36 h-36 flex items-center justify-center">
+                            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                                <circle class="text-slate-100" stroke-width="8" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
+                                <circle id="metrics-circle-progress" class="text-teal-600 transition-all duration-1000" stroke-width="8" stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50" />
+                            </svg>
+                            <div class="absolute flex flex-col items-center">
+                                <span id="metrics-percent-text" class="text-3xl font-extrabold text-slate-900">0%</span>
+                                <span class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Aptitud</span>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <span id="evaluation-outcome-badge" class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider">Cargando...</span>
+                        </div>
+                    </div>
+
+                    <!-- Detalle de Puntuación y Métricas -->
+                    <div class="md:col-span-8 grid grid-cols-2 gap-4">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <span class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Puntaje Consolidado</span>
+                            <span id="results-total-score" class="text-xl sm:text-2xl font-bold text-slate-900">0 / 100 pts</span>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <span class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Acciones Óptimas</span>
+                            <span id="results-perfect-count" class="text-xl sm:text-2xl font-bold text-emerald-600">0 / 10</span>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <span class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Tiempo de Operación</span>
+                            <span id="results-time-elapsed" class="text-xl sm:text-2xl font-bold text-slate-900">0m 0s</span>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <span class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">Infracciones Críticas</span>
+                            <span id="results-critical-fail-count" class="text-xl sm:text-2xl font-bold text-rose-600">0 Errores</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fortalezas y Áreas de Mejora por Categoría -->
+                <div class="mb-8">
+                    <h3 class="text-xs sm:text-sm font-bold text-slate-900 mb-4 flex items-center space-x-2 uppercase tracking-wider text-slate-500">
+                        <i data-lucide="bar-chart-3" class="text-teal-600"></i>
+                        <span>Análisis de Aptitud por Competencias Clínicas</span>
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="competencies-container">
+                        <!-- Generado de forma dinámica -->
+                    </div>
+                </div>
+
+                <!-- Botones de Acción de Fin -->
+                <div class="flex flex-col lg:flex-row gap-3 justify-between border-t border-slate-100 pt-6 no-print font-medium flex-wrap">
+                    <button onclick="resetToWelcome()" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition flex items-center justify-center space-x-2">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        <span>Reiniciar Clínica</span>
+                    </button>
+                    <div class="flex flex-col sm:flex-row gap-2 flex-wrap flex-1 justify-end">
+                        <button onclick="toggleCaseReview()" class="px-4 py-2.5 bg-teal-50 hover:bg-teal-100 text-teal-800 text-xs font-bold rounded-xl border border-teal-200 transition flex items-center justify-center space-x-1.5">
+                            <i data-lucide="eye" class="w-4 h-4"></i>
+                            <span>Revisar Resoluciones</span>
+                        </button>
+                        <!-- BOTÓN COPIAR GOOGLE SHEETS -->
+                        <button onclick="copyToClipboardForSheets()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-md transition flex items-center justify-center space-x-1.5">
+                            <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+                            <span>Copiar para Google Sheets</span>
+                        </button>
+                        <!-- BOTÓN DESCARGAR CSV -->
+                        <button onclick="exportToGoogleSheetsCSV()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition flex items-center justify-center space-x-1.5">
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                            <span>Descargar CSV</span>
+                        </button>
+                        <button id="download-certificate-btn" onclick="openCertificate()" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xs font-bold rounded-xl shadow-md transition flex items-center justify-center space-x-1.5">
+                            <i data-lucide="award" class="w-4 h-4"></i>
+                            <span>Obtener Certificación</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- REVISIÓN DETALLADA DE CASO POR CASO -->
+                <div id="cases-review-accordion" class="hidden mt-8 pt-8 border-t border-slate-200">
+                    <h3 class="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wider text-slate-500">Revisión Exhaustiva de Casos Aplicados</h3>
+                    <div id="review-list" class="space-y-4">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 4: VISTA DE CERTIFICADO DE IDONEIDAD -->
+        <section id="certificate-screen" class="hidden flex-grow flex-col justify-center items-center py-6 no-print">
+            <div class="bg-white p-6 sm:p-12 rounded-2xl shadow-2xl border-4 border-double border-slate-800 max-w-4xl w-full text-center print-card relative overflow-hidden">
+                <!-- Sello de Fondo Decorativo -->
+                <div class="absolute -right-16 -bottom-16 w-64 h-64 text-slate-100 opacity-20 pointer-events-none">
+                    <i data-lucide="shield-check" class="w-full h-full"></i>
+                </div>
+
+                <!-- Encabezado del Certificado -->
+                <div class="flex flex-col items-center mb-6">
+                    <div class="p-4 bg-teal-50 rounded-full border border-teal-100 mb-3 text-teal-700">
+                        <i data-lucide="award" class="h-12 w-12"></i>
+                    </div>
+                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Dirección de Seguridad Vial y Calidad de Datos</span>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-slate-950 mt-1 font-serif-title">Certificación de Idoneidad para Campo</h2>
+                    <div class="w-24 h-1 bg-gradient-to-r from-teal-500 to-cyan-500 mt-3 rounded-full"></div>
+                </div>
+
+                <p class="text-slate-500 text-xs italic">Se deja constancia de que el/la analista de campo:</p>
+                <h3 id="cert-user-name" class="text-xl sm:text-2.5xl font-extrabold text-teal-800 my-4 tracking-tight">Nombre del Analista</h3>
+                
+                <p class="text-slate-600 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed mb-6">
+                    Ha completado y aprobado de manera satisfactoria el entrenamiento de decisiones de campo según la guía técnica de calidad <strong class="text-slate-900">01_Guia_consentimiento_abordaje_manejo_novedades</strong> para el estudio de cascos de motociclistas. Demostró competencias técnicas específicas de su rol, mitigación de objeciones, neutralidad de datos, control de seguridad vial y criterios estrictos de no negociación.
+                </p>
+
+                <!-- Calificación Destacada -->
+                <div class="inline-block bg-slate-50 border border-slate-200 px-8 py-3 rounded-2xl mb-8">
+                    <span class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest">Nivel de Idoneidad Técnica</span>
+                    <strong id="cert-score" class="text-2xl sm:text-3xl font-extrabold text-teal-700">95 / 100</strong>
+                    <span class="block text-[11px] font-semibold text-emerald-600 mt-0.5">Analista Acreditado de Campo</span>
+                </div>
+
+                <!-- Firmas y Validadores -->
+                <div class="grid grid-cols-2 gap-8 max-w-lg mx-auto border-t border-slate-200 pt-8 mb-6">
+                    <div class="text-center">
+                        <div class="font-serif italic text-teal-800 text-xs sm:text-sm mb-1 border-b border-dashed border-slate-300 pb-1 font-bold">Comité de Calidad ANSV</div>
+                        <span class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider">Aseguramiento del Producto 3</span>
+                    </div>
+                    <div class="text-center">
+                        <div id="cert-validation-code" class="font-mono text-slate-700 text-[10px] sm:text-xs mb-1 border-b border-dashed border-slate-300 pb-1">ID-XXXXX</div>
+                        <span class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider">Código de Seguridad Único</span>
+                    </div>
+                </div>
+
+                <!-- Pie de Certificado -->
+                <div class="text-[9px] text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-2 border-t border-slate-150 pt-4">
+                    <span>Fecha de Certificación: <strong id="cert-date">19 de Mayo, 2026</strong></span>
+                    <span>Trazabilidad e Inteligencia de Datos Vía Vial</span>
+                </div>
+
+                <!-- Botonera del Certificado -->
+                <div class="mt-8 flex justify-center gap-3 no-print">
+                    <button onclick="window.print()" class="px-5 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-lg transition flex items-center space-x-2">
+                        <i data-lucide="printer" class="w-4 h-4"></i>
+                        <span>Imprimir / Guardar PDF</span>
+                    </button>
+                    <button onclick="closeCertificate()" class="px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold rounded-lg transition">
+                        <span>Cerrar</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL POPUP DE RETROALIMENTACIÓN (TRAINING MODE) -->
+    <div id="feedback-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-slate-200 animate-in fade-in zoom-in duration-200 flex flex-col">
+            <div class="flex items-start space-x-4 mb-4">
+                <div id="feedback-modal-icon-bg" class="p-3 bg-slate-100 text-slate-800 rounded-2xl shrink-0 shadow-md">
+                    <i data-lucide="info" id="feedback-modal-icon" class="w-6 h-6"></i>
+                </div>
+                <div class="flex-grow min-w-0">
+                    <span class="text-[10px] font-bold tracking-widest text-slate-400 uppercase block">Análisis Operativo</span>
+                    <h3 id="feedback-modal-title" class="text-base sm:text-lg font-extrabold text-slate-900 font-serif-title leading-tight">Decisión Procesada</h3>
+                    <p id="feedback-modal-text" class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed break-words"></p>
+                </div>
+            </div>
+            
+            <!-- Recuadro informativo de la Guía Oficial -->
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 mb-5 text-xs">
+                <div class="flex items-center space-x-1.5 text-slate-700 font-bold mb-1">
+                    <i data-lucide="book-open" class="w-4 h-4 text-teal-600 shrink-0"></i>
+                    <span>Trazabilidad Técnica:</span>
+                </div>
+                <p id="feedback-modal-reference" class="text-slate-600 leading-relaxed font-mono text-[11px]">01_Guia_consentimiento_abordaje_manejo_novedades</p>
+            </div>
+
+            <div class="flex justify-end">
+                <button onclick="closeFeedbackModal()" class="w-full sm:w-auto px-6 py-2.5 bg-teal-800 hover:bg-teal-950 text-white text-xs font-bold rounded-xl shadow transition flex items-center justify-center space-x-2">
+                    <span id="feedback-modal-next-btn-text">Siguiente caso</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Alertas Personalizadas -->
+    <div id="custom-alert-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 border border-slate-200 animate-in fade-in zoom-in duration-200">
+            <div class="flex items-start space-x-3 mb-4">
+                <div id="alert-modal-icon-bg" class="p-2 bg-rose-100 text-rose-700 rounded-xl">
+                    <i data-lucide="alert-triangle" id="alert-modal-icon" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 id="alert-modal-title" class="text-base font-bold text-slate-900 font-serif-title">Alerta Técnica</h3>
+                    <p id="alert-modal-text" class="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed break-words"></p>
+                </div>
+            </div>
+            <div class="flex justify-end pt-2">
+                <button onclick="closeCustomAlert()" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-lg transition">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- BASE DE CASOS CON ILUSTRACIONES SVG INTEGRADAS ---
+        const casesDatabase = [
+            {
+                id: 1,
+                role: 'encuestador',
+                title: 'Objeción de Tiempo: "No tengo tiempo para esto"',
+                category: 'Técnicas de Abordaje',
+                difficulty: 'Fácil',
+                illustration: `<svg class="w-32 h-32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="#F0FDFA" stroke="#2DD4BF" stroke-width="2"/>
+                    <!-- Scooter/Moto -->
+                    <path d="M25 65C25 60 30 55 45 55H55V65H25Z" fill="#1E293B"/>
+                    <circle cx="32" cy="70" r="8" fill="#475569" stroke="#1E293B" stroke-width="2"/>
+                    <circle cx="62" cy="70" r="8" fill="#475569" stroke="#1E293B" stroke-width="2"/>
+                    <!-- Delivery box -->
+                    <rect x="23" y="42" width="16" height="16" rx="2" fill="#F59E0B"/>
+                    <!-- Speed Clock -->
+                    <circle cx="72" cy="35" r="14" fill="#FFFFFF" stroke="#0F172A" stroke-width="2"/>
+                    <path d="M72 35V27M72 35L78 30" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/>
+                </svg>`,
+                scenario: 'Abordas a un motociclista en una bahía comercial de Bogotá para el estudio de cascos. El conductor se nota impaciente y te interrumpe de inmediato: <em class="bg-slate-100 px-1 font-mono text-xs rounded">"Tengo solo 3 minutos para recoger un pedido y salir corriendo, no tengo tiempo para encuestas largas de marcas"</em>.',
+                annex_tip: 'Según la Guía Operativa (Sección 3.3 - Manejo de objeciones): ante la objeción "No tengo tiempo", el encuestador cuantitativo debe "Ajustar la presentación, indicar la duración real y consultar si es posible un momento alterno".',
+                options: [
+                    {
+                        text: 'Explicar que la encuesta es rápida pero muy relevante, pedirle que cancele la carrera de entrega y advertirle que si no coopera con el estudio nacional de la ANSV, la ciudad no mejorará la señalización vial.',
+                        score: 0,
+                        feedback: 'Infracción: Coerción o presión al participante. La participación es siempre voluntaria e insistir de forma indebida o amenazante viola flagrantemente el Principio Operativo 1.'
+                    },
+                    {
+                        text: 'Agradecer amablemente, retirarse del lugar de inmediato para no entorpecer su trayecto, marcar el punto de la ruta como "Rechazo Definitivo" y no intentar agendar de nuevo.',
+                        score: 5,
+                        feedback: 'Poco proactivo: Aunque respetas su tiempo, la guía recomienda buscar alternativas de agendamiento breve. Se pierde un perfil crítico del muestreo de manera muy temprana.'
+                    },
+                    {
+                        text: 'Ajustar la presentación de inmediato declarando la duración real corta (máximo 5 minutos) y, si es imposible en ese instante, consultar respetuosamente si es factible reprogramar la toma cuando regrese al punto o en un momento alterno del día.',
+                        score: 10,
+                        feedback: '¡Excelente! Aplica perfectamente el protocolo de manejo de objeciones de la Sección 3.3 de la Guía, logrando flexibilidad sin sesgar el segmento crítico de conductores repartidores.'
+                    }
+                ]
+            },
+            {
+                id: 2,
+                role: 'encuestador',
+                title: 'Objeción de Datos: "No confío en dar mis datos personales"',
+                category: 'Protocolo de Consentimiento',
+                difficulty: 'Fácil',
+                illustration: `<svg class="w-32 h-32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="#F0FDFA" stroke="#2DD4BF" stroke-width="2"/>
+                    <!-- Shield -->
+                    <path d="M50 25C60 25 70 20 70 20V50C70 62 50 75 50 75C50 75 30 62 30 50V20C30 20 40 25 50 25Z" fill="#0D9488" stroke="#115E59" stroke-width="2"/>
+                    <!-- Lock -->
+                    <rect x="42" y="45" width="16" height="12" rx="2" fill="#FFFFFF"/>
+                    <path d="M45 45V39C45 36.2 47.2 34 50 34C52.8 34 55 36.2 55 39V45" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+                </svg>`,
+                scenario: 'Durante el abordaje cuantitativo en un semáforo de Cali, un conductor se muestra reacio a participar. Te manifiesta de forma tajante: <em class="bg-slate-100 px-1 font-mono text-xs rounded">"Ustedes me van a pedir el número de mi cédula o las placas de mi moto para meterme en problemas con la policía de tránsito o con la Dian"</em>.',
+                annex_tip: 'Según el Protocolo de Consentimiento (Sección 2.1 y 3.3): se debe explicar que la encuesta es voluntaria, confidencial y aclararle al informante que la información se consolida de forma agrupada para fines de políticas públicas e investigación.',
+                options: [
+                    {
+                        text: 'Aclarar de inmediato que la participación es voluntaria, que el estudio no solicita datos sensibles innecesarios como cédulas o placas de la moto, y que la información tiene fines agregados de investigación y desarrollo de políticas públicas.',
+                        score: 10,
+                        feedback: '¡Correcto! Cumple con la Guía de Consentimiento de la ANSV (Sección 3.3). Calma los temores del conductor y garantiza su tranquilidad frente al Habeas Data.'
+                    },
+                    {
+                        text: 'Ofrecerle realizar la encuesta con datos e identificaciones falsas de otra persona para que quede tranquilo, y luego ajustar los datos reales bajo tu criterio personal.',
+                        score: 0,
+                        feedback: 'Infracción Crítica: Criterio de No Negociación. Alterar u ocultar identidades con datos ficticios para forzar la captura destruye la validez técnica de la muestra.'
+                    },
+                    {
+                        text: 'Explicarle que es un deber civil obligatorio colaborar con los estudios nacionales del Gobierno, por lo que tiene el deber legal de brindar sus datos reales si no quiere problemas en la vía.',
+                        score: 2,
+                        feedback: 'Infracción: La Guía de Consentimiento prohíbe cualquier forma de presión, coerción o instencia inapropiada. La participación es libre y voluntaria.'
+                    }
+                ]
+            },
+            {
+                id: 3,
+                role: 'coordinador',
+                title: 'Novedad de Seguridad: Tensión Territorial por Presión Comercial',
+                category: 'Manejo de Novedades',
+                difficulty: 'Difícil',
+                illustration: `<svg class="w-32 h-32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="#FDF2F8" stroke="#F43F5E" stroke-width="2"/>
+                    <!-- Warning Sign -->
+                    <path d="M50 20L80 72H20L50 20Z" fill="#F43F5E" stroke="#9F1239" stroke-width="3" stroke-linejoin="round"/>
+                    <rect x="47" y="38" width="6" height="18" rx="3" fill="#FFFFFF"/>
+                    <circle cx="50" cy="63" r="3.5" fill="#FFFFFF"/>
+                </svg>`,
+                scenario: 'Un equipo de tres encuestadores cuantitativos que se encuentra realizando la caracterización de un corredor comercial de repuestos te reporta en tiempo real que dos comerciantes del sector, de manera hostil y agresiva, los están acusando de espías y están incitando al resto de vendedores a sacarlos de la zona a la fuerza.',
+                annex_tip: 'Según la Matriz de Novedades (Sección 4): ante situaciones de "Riesgo territorial, alteración del orden o presión comercial que comprometa la aplicación", la acción inmediata obligatoria es "Suspender actividad y reubicar equipo", escalando a Coordinador y Dirección.',
+                options: [
+                    {
+                        text: 'Pedirle al equipo que se divida, se quiten los chalecos e intenten seguir con el levantamiento de información de manera oculta e individual para no alterar a los comerciantes.',
+                        score: 0,
+                        feedback: 'Infracción Grave: Violas los criterios de no negociación de la Sección 6: "No continuar actividades cuando exista riesgo para la integridad del equipo".'
+                    },
+                    {
+                        text: 'Instar a los encuestadores a mantener su posición, buscar apoyo de la policía local de tránsito para obligar a los comerciantes a permitir el operativo, y seguir con la cuota diaria establecida.',
+                        score: 3,
+                        feedback: 'Inadecuado: Forzar el operativo con la policía en un entorno comercial hostil puede desencadenar altercados mayores y arruina la calidad y neutralidad de los datos.'
+                    },
+                    {
+                        text: 'Ordenar de inmediato la suspensión de la actividad en ese punto comercial para proteger al equipo, autorizar la reubicación a una zona segura adyacente y registrar la Novedad de Seguridad en el formato oficial el mismo día.',
+                        score: 10,
+                        feedback: '¡Excelente! Aplicas rigurosamente el protocolo de la Guía Operativa (Sección 4), priorizando la integridad del equipo de encuestadores y reportando bajo trazabilidad formal.'
+                    }
+                ]
+            },
+            {
+                id: 4,
+                role: 'encuestador',
+                title: 'Criterio de No Negociación: La Tentación del "Relleno" de Datos',
+                category: 'Criterios No Negociables',
+                difficulty: 'Media',
+                illustration: `<svg class="w-32 h-32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="#FFFBEB" stroke="#F59E0B" stroke-width="2"/>
+                    <!-- Motorcycle Handlebars with hanging Helmet -->
+                    <path d="M25 40H75M32 40V50M68 40V50" stroke="#475569" stroke-width="4" stroke-linecap="round"/>
+                    <!-- Helmet shape -->
+                    <path d="M50 35C38 35 34 48 34 58H66C66 48 62 35 50 35Z" fill="#3B82F6" stroke="#1D4ED8" stroke-width="2"/>
+                    <rect x="42" y="58" width="16" height="5" fill="#F59E0B"/>
+                    <!-- Visual Warning -->
+                    <circle cx="50" cy="50" r="15" fill="#FFF1F2" stroke="#E11D48" stroke-width="2"/>
+                    <path d="M50 42V51M50 56H50.01" stroke="#E11D48" stroke-width="3" stroke-linecap="round"/>
+                </svg>`,
+                scenario: 'Al final de una extensa y calurosa jornada en Barranquilla, te falta solo una encuesta para cumplir tu meta diaria. Encuentras una motocicleta parqueada con su casco sobre el manubrio. Puedes ver con total claridad la marca, tipo y el holograma de certificación. Sin embargo, el conductor no se encuentra en el lugar.',
+                annex_tip: 'Criterios de No Negociación (Sección 6): "No diligenciar encuestas sin interacción efectiva con la fuente" y "No registrar datos fuera del punto real ni completar vacíos por intuición".',
+                options: [
+                    {
+                        text: 'Diligenciar el módulo observacional del casco apoyándote en tu experiencia visual y usar tu criterio para estimar y rellenar las preguntas de percepción para completar la cuota y no perjudicar tu rendimiento diario.',
+                        score: 0,
+                        feedback: 'Infracción Crítica: Esta práctica viola gravemente los criterios éticos no negociables (Sección 6). Es causal directa de anulación de la encuesta y de sanción técnica.'
+                    },
+                    {
+                        text: 'Esperar un máximo de 5 minutos al conductor. Si no aparece, registrar la encuesta como "Completada" tomando fotos del casco, y colocar en el reporte cualitativo que el usuario aprobó de manera tácita.',
+                        score: 3,
+                        feedback: 'Incorrecto: Sigue representando una captura sin interacción efectiva y presiona el consentimiento sin la validación explícita del motociclista.'
+                    },
+                    {
+                        text: 'Respetar los Criterios de No Negociación: buscar un informante real activo con el cual entablar interacción directa y efectiva, evitando registrar datos a través de la suposición o la intuición.',
+                        score: 10,
+                        feedback: '¡Impecable! Actúas con absoluta integridad ética. El diligenciamiento sin interacción efectiva con la fuente está terminantemente prohibido bajo cualquier circunstancia.'
+                    }
+                ]
+            },
+            {
+                id: 5,
+                role: 'cualitativo',
+                title: 'Abordaje Eficiente a Establecimiento de Venta',
+                category: 'Levantamiento Cualitativo',
+                difficulty: 'Media',
+                illustration: `<svg class="w-32 h-32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="#F0FDF4" stroke="#4ADE80" stroke-width="2"/>
+                    <!-- Store Shelf -->
+                    <line x1="20" y1="70" x2="80" y2="70" stroke="#475569" stroke-width="3"/>
+                    <line x1="20" y1="45" x2="80" y2="45" stroke="#475569" stroke-width="3"/>
+                    <!-- Helmets on shelves -->
+                    <path d="M35 30C30 30 28 38 28 44H42C42 38 40 30 35 30Z" fill="#EF4444"/>
+                    <path d="M65 30C60 30 58 38 58 44H72C72 38 70 30 65 30Z" fill="#3B82F6"/>
+                    <path d="M50 55C45 55 43 63 43 69H57C57 63 55 55 50 55Z" fill="#F59E0B"/>
+                </svg>`,
+                scenario: 'Como miembro del Equipo Cualitativo, llegas a un gran almacén de venta de cascos para aplicar el cuestionario cualitativo de establecimientos de venta. Notas que el administrador del negocio está muy ocupado discutiendo precios y cerrando un negocio importante con un cliente potencial.',
+                annex_tip: 'Pautas por tipo de fuente (Sección 3.2): para Comerciantes/Vendedores, el protocolo cualitativo y cuantitativo ordena "Ubicarse sin interferir la venta, identificar al informante con mayor conocimiento del punto y validar disponibilidad de tiempo".',
+                options: [
+                    {
+                        text: 'Ubicarte discretamente en el almacén sin interferir en la transacción comercial, esperar a que el administrador esté libre, identificar al informante idóneo, presentarte con el guion breve y concertar el tiempo necesario para la encuesta.',
+                        score: 10,
+                        feedback: '¡Excelente decisión! Respetas la actividad productiva del comerciante (Sección 3.1) y aseguras capturar al informante con mayor conocimiento técnico sin generar rechazos.'
+                    },
+                    {
+                        text: 'Interrumpir cortésmente la negociación indicándole al comerciante que tu encuesta de la ANSV es prioritaria para el gobierno y que resolverla solo tomará un par de minutos de su tiempo.',
+                        score: 2,
+                        feedback: 'Incorrecto: Interfiere directamente con las ventas y viola la pauta operativa de no bloquear la atención comercial ni las actividades productivas de los puntos.'
+                    },
+                    {
+                        text: 'Iniciar la encuesta de manera autónoma con el primer empleado que encuentres desocupado, sin validar si conoce la oferta y las barreras de comercialización, para avanzar rápidamente.',
+                        score: 4,
+                        feedback: 'Inadecuado: La guía exige identificar al informante con mayor conocimiento y autoridad técnica en el establecimiento para garantizar la calidad del Producto 3.'
+                    }
+                ]
+            },
+            {
+                id: 6,
+                role: 'coordinador',
+                title: 'Novedad Metodológica: Tiempos Atípicos de Encuestas',
+                category: 'Manejo de Novedades',
+                difficulty: 'Media',
+                illustration: `<svg class="w-32 h-32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="#EFF6FF" stroke="#3B82F6" stroke-width="2"/>
+                    <!-- Stopwatch -->
+                    <circle cx="50" cy="53" r="22" fill="#FFFFFF" stroke="#1E293B" stroke-width="3"/>
+                    <path d="M50 31V26M42 26H58M50 53L62 44" stroke="#1E293B" stroke-width="3" stroke-linecap="round"/>
+                    <circle cx="50" cy="53" r="2" fill="#EF4444"/>
+                    <!-- Fast lines -->
+                    <line x1="18" y1="35" x2="28" y2="35" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="14" y1="45" x2="26" y2="45" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/>
+                </svg>`,
+                scenario: 'Durante la auditoría diaria del flujo de datos en plataforma, como Coordinador de Campo detectas que un encuestador cuantitativo ha registrado una encuesta completa con un tiempo total de captura de solo 1 minuto y 20 segundos. El promedio estándar establecido para este instrumento es de 10 a 12 minutos.',
+                annex_tip: 'Según el Manual de Manejo de Novedades (Sección 4): ante novedades metodológicas o de calidad (tiempos atípicos, inconsistencias), el Coordinador junto al responsable de calidad debe "Bloquear uso del registro, corregir, reentrenar o repetir aplicación".',
+                options: [
+                    {
+                        text: 'Bloquear preventivamente el uso de dicho registro en la base de datos oficial, notificar la novedad metodológica en la planilla diaria, citar al encuestador para realizar la auditoría presencial y planificar un reentrenamiento preventivo del mismo.',
+                        score: 10,
+                        feedback: '¡Perfecto! Cumples con rigor el protocolo para resguardar la validez de los datos de la ANSV, bloqueando el registro anómalo e iniciando la ruta de reentrenamiento y corrección.'
+                    },
+                    {
+                        text: 'Aceptar el registro en el servidor asumiendo que el encuestador es extremadamente veloz y que el motociclista respondió rápido para seguir su trayecto.',
+                        score: 0,
+                        feedback: 'Infracción de Calidad: Ignorar un tiempo de aplicación atípico atenta directamente contra los criterios de representatividad y calidad exigidos por la ANSV.'
+                    },
+                    {
+                        text: 'Modificar manualmente el registro en la base de datos de la oficina para extender artificialmente la duración de la encuesta a 11 minutos, cumpliendo así con los parámetros del cliente.',
+                        score: 1,
+                        feedback: 'Infracción Crítica: Alterar bases de datos mediante suposiciones de escritorio introduce un fraude técnico severo y viola los principios de ética de datos.'
+                    }
+                ]
+            },
+            {
+                id: 7,
+                role: 'cualitativo',
+                title: 'Consentimiento para Grabación en Grupo Focal',
+                category: 'Protocolo de Consentimiento',
+                difficulty: 'Media',
+                illustration: `<svg class="w-32 h-32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="#F5F5F7" stroke="#94A3B8" stroke-width="2"/>
+                    <!-- Microphone -->
+                    <rect x="44" y="30" width="12" height="24" rx="6" fill="#475569" stroke="#1E293B" stroke-width="2"/>
+                    <path d="M36 42C36 50 42 54 50 54C58 54 64 50 64 42" stroke="#1E293B" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="50" y1="54" x2="50" y2="68" stroke="#1E293B" stroke-width="3"/>
+                    <line x1="40" y1="68" x2="60" y2="68" stroke="#1E293B" stroke-width="3"/>
+                    <!-- Warning / No sound icon -->
+                    <circle cx="70" cy="30" r="10" fill="#EF4444"/>
+                    <path d="M66 30H74" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+                </svg>`,
+                scenario: 'Estás liderando un grupo focal sobre percepciones del mercado de cascos. Al solicitar la firma del consentimiento y explicar que la sesión será grabada en audio para asegurar la fidelidad del registro (Sección 2.1), un motociclista clave manifiesta: <em class="bg-slate-100 px-1 font-mono text-xs rounded">"Yo opino y participo, pero bajo ninguna circunstancia autorizo que graben mi voz ni mi nombre"</em>.',
+                annex_tip: 'Según la Guía de Consentimiento (Sección 2.1): el equipo cualitativo debe "Indicar si el ejercicio incluye notas, audio, fotografías u otro soporte, solicitar autorización expresa y suspender la captura o el soporte si la persona manifiesta incomodidad o no autoriza".',
+                options: [
+                    {
+                        text: 'Explicarle que no hay problema, que puede participar activamente en el grupo de discusión, apagar el dispositivo de audio y delegar a un miembro del equipo cualitativo la toma minuciosa de notas manuales detalladas sin registrar nombres.',
+                        score: 10,
+                        feedback: '¡Excelente! Respetas la voluntad de la fuente garantizando su anonimato (Sección 2.1) sin perder sus valiosas percepciones cualitativas, utilizando un soporte alterno autorizado (notas).'
+                    },
+                    {
+                        text: 'Dejar el grabador encendido de forma disimulada explicándole en privado al participante que es solo un respaldo interno del proyecto y que nadie externo escuchará su voz.',
+                        score: 0,
+                        feedback: 'Infracción Ética Grave: Captar audio o evidencias sin autorización explícita viola las reglas de no negociación (Sección 6) y expone al proyecto a un grave riesgo reputacional.'
+                    },
+                    {
+                        text: 'Excluir inmediatamente al motociclista de la reunión, argumentando que la grabación de audio es un requisito contractual obligatorio de la ANSV para la entrega del Producto 3.',
+                        score: 4,
+                        feedback: 'Incorrecto: La exclusión es innecesaria. La guía cualitativa permite la toma de notas como alternativa de registro cuando no se autoriza el audio directo.'
+                    }
+                ]
+            },
+            {
+                id: 8,
+                role: 'coordinador',
+                title: 'Novedad Ética: Queja de Usuario por Presión en Campo',
+                category: 'Manejo de Novedades',
+                difficulty: 'Difícil',
+                illustration: `<svg class="w-32 h-32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="#FFF1F2" stroke="#FDA4AF" stroke-width="2"/>
+                    <!-- Customer Complaint Icon -->
+                    <circle cx="50" cy="40" r="14" fill="#E11D48" stroke="#9F1239" stroke-width="2"/>
+                    <path d="M30 75C30 63 38 56 50 56C62 56 70 63 70 75" fill="#E11D48" stroke="#9F1239" stroke-width="2"/>
+                    <!-- Talk Bubble with Angry mark -->
+                    <path d="M68 25C68 20 78 20 78 25V35H68V25Z" fill="#F43F5E"/>
+                    <rect x="47" y="32" width="6" height="12" fill="#FFFFFF" rx="1"/>
+                    <circle cx="50" cy="48" r="3" fill="#FFFFFF"/>
+                </svg>`,
+                scenario: 'Un ciudadano se comunica a la línea de atención de la ANSV manifestando una queja formal: asegura que un encuestador lo presionó de forma indebida y lo siguió por la calle de manera insistente para lograr tomar una foto del barboquejo de su casco, causándole gran incomodidad y desconfianza.',
+                annex_tip: 'Según la Matriz de Novedades (Sección 4): ante novedades éticas o de trato ("queja por presión, incomodidad manifiesta, exposición innecesaria"), la acción de la coordinación es "Suspender, proteger a la fuente, documentar y activar revisión".',
+                options: [
+                    {
+                        text: 'Llamar al encuestador para indicarle que sea más cuidadoso con la cámara de su celular la próxima vez, minimizando la queja del ciudadano por considerarla exagerada.',
+                        score: 3,
+                        feedback: 'Insuficiente: Minimizar una queja por presión transgrede el trato ético básico y los lineamientos de la ANSV, arriesgando la reputación de la consultora.'
+                    },
+                    {
+                        text: 'Suspender provisionalmente las actividades de levantamiento de ese encuestador para proteger a la fuente, registrar de manera formal la novedad ética, revisar el caso con el implicado y reprogramar un reentrenamiento obligatorio.',
+                        score: 10,
+                        feedback: '¡Excelente gestión ética! Reaccionas con responsabilidad y madurez metodológica, priorizando la confidencialidad, el trato digno de los participantes y el reentrenamiento.'
+                    },
+                    {
+                        text: 'Premiar al encuestador de forma privada por su gran persistencia y compromiso al recolectar la foto de certificación del barboquejo, la cual es obligatoria para el Producto 3.',
+                        score: 0,
+                        feedback: 'Infracción Crítica: Fomentar el hostigamiento o la coerción en campo es contrario a los principios éticos del contrato, el respeto por las personas y las leyes vigentes.'
+                    }
+                ]
+            },
+            {
+                id: 9,
+                role: 'encuestador',
+                title: 'Objeción por Hostilidad y Desconfianza en Campo',
+                category: 'Técnicas de Abordaje',
+                difficulty: 'Media',
+                illustration: `<svg class="w-32 h-32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="#FFFBEB" stroke="#FBBF24" stroke-width="2"/>
+                    <!-- Road with traffic light/camera -->
+                    <rect x="42" y="20" width="16" height="35" rx="3" fill="#1E293B"/>
+                    <circle cx="50" cy="28" r="4" fill="#EF4444"/>
+                    <circle cx="50" cy="38" r="4" fill="#F59E0B"/>
+                    <circle cx="50" cy="48" r="4" fill="#10B981"/>
+                    <!-- Warning MegaPhone -->
+                    <path d="M15 65L30 55V75L15 65Z" fill="#D97706" stroke="#92400E" stroke-width="2"/>
+                    <rect x="30" y="58" width="12" height="14" fill="#D97706" stroke="#92400E" stroke-width="2"/>
+                </svg>`,
+                scenario: 'Mientras realizas encuestas a motociclistas en una avenida principal de Cali, el conductor de un motocarro reacciona de forma agresiva y hostil al ser abordado, acusándote a gritos de estar de acuerdo con las fotomultas y buscando sabotear tus encuestas con otros transeúntes.',
+                annex_tip: 'Según el Manejo de Objeciones (Sección 3.3): ante hostilidad o desconfianza extrema, el protocolo instruye: "Mantener tono sereno, no confrontar, retirarse si persiste y reportar como novedad".',
+                options: [
+                    {
+                        text: 'Confrontar respetuosamente al conductor, exigiéndole que deje de gritar y demostrándole con documentos oficiales de la ANSV que está equivocado sobre las políticas de tránsito.',
+                        score: 2,
+                        feedback: 'Inadecuado: Discutir con informantes hostiles escala las tensiones, compromete tu seguridad física y perjudica la imagen del proyecto en vía pública.'
+                    },
+                    {
+                        text: 'Mantener un tono sereno, no entrar en discusiones, retirarse calmadamente del punto al persistir la hostilidad para resguardar la seguridad y documentar el incidente como novedad el mismo día.',
+                        score: 10,
+                        feedback: '¡Correcto! Cumples de forma exacta con el protocolo de manejo de objeciones (Sección 3.3), resguardando tu integridad física y la del equipo operativo.'
+                    },
+                    {
+                        text: 'Llamar de inmediato a los agentes de tránsito locales para denunciar que el motociclista está interfiriendo de forma ilegal con un operativo de seguridad de la ANSV.',
+                        score: 0,
+                        feedback: 'Infracción: El equipo de investigación no ejerce funciones sancionatorias de tránsito. Involucrar a las autoridades de control rompe la confianza y genera alta hostilidad.'
+                    }
+                ]
+            },
+            {
+                id: 10,
+                role: 'cualitativo',
+                title: 'Moderación de Actores e Inducción de Respuestas en Entrevistas',
+                category: 'Levantamiento Cualitativo',
+                difficulty: 'Media',
+                illustration: `<svg class="w-32 h-32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="#ECFDF5" stroke="#34D399" stroke-width="2"/>
+                    <!-- Balance Scale of Quality -->
+                    <line x1="50" y1="25" x2="50" y2="75" stroke="#1F2937" stroke-width="4"/>
+                    <line x1="25" y1="35" x2="75" y2="35" stroke="#1F2937" stroke-width="4"/>
+                    <!-- Plates -->
+                    <line x1="25" y1="35" x2="25" y2="55" stroke="#4B5563" stroke-width="2"/>
+                    <line x1="75" y1="35" x2="75" y2="55" stroke="#4B5563" stroke-width="2"/>
+                    <path d="M15 55H35" stroke="#1F2937" stroke-width="3"/>
+                    <path d="M65 55H85" stroke="#1F2937" stroke-width="3"/>
+                </svg>`,
+                scenario: 'Durante una entrevista semiestructurada cualitativa con un distribuidor de cascos, el entrevistado comienza a hacer fuertes juicios de valor negativos sobre marcas específicas competidoras y te pregunta: <em class="bg-slate-100 px-1 font-mono text-xs rounded">"Ustedes saben que esas marcas baratas no protegen nada y son ilegales en el país, ¿cierto? ¿Ustedes qué opinan de ellos?"</em>.',
+                annex_tip: 'Según las Reglas Transversales de Abordaje (Sección 3.1): el personal del levantamiento debe "Evitar juicios sobre marcas, precios, legalidad del producto o decisiones de compra" y "Las respuestas no se corrigen ni se discuten; se registran con precisión" (Principios Operativos 1).',
+                options: [
+                    {
+                        text: 'Darle la razón al comerciante argumentando que de acuerdo a las pruebas de laboratorio internacionales esas marcas baratas en efecto no cumplen con la norma ECE 22.06, para así generar sintonía y empatía con el entrevistado.',
+                        score: 2,
+                        feedback: 'Infracción: Rompe el principio de neutralidad. El equipo de levantamiento cualitativo jamás debe emitir juicios de valor ni validar sesgos comerciales de marcas.'
+                    },
+                    {
+                        text: 'Mantener una postura neutral, aclarar cordialmente que como investigadores cualitativos no emiten opiniones sobre marcas particulares ni precios, registrar su percepción exacta con precisión y redirigir sutilmente la conversación hacia las barreras generales de comercialización.',
+                        score: 10,
+                        feedback: '¡Impecable! Aplicas con excelencia la regla de neutralidad de las Secciones 1 y 3.1 de la Guía, asegurando un registro de datos fidedigno y libre de sesgo del investigador.'
+                    },
+                    {
+                        text: 'Suspender de inmediato la entrevista argumentando que el comerciante está intentando inducir respuestas y violar las cláusulas éticas estipuladas en el protocolo de la ANSV.',
+                        score: 4,
+                        feedback: 'Inadecuado: No es necesario suspender la sesión cualitativa. La guía instruye redirigir la interacción aplicando un sondeo neutral y sereno.'
+                    }
+                ]
+            }
+        ];
+
+        // --- VARIABLES DE ESTADO ---
+        let state = {
+            username: 'Invitado',
+            userId: 'N/A',
+            selectedRoleFilter: 'coordinador',
+            mode: 'training', // 'training' o 'evaluation'
+            currentCaseIndex: 0,
+            activeCases: [], // Casos filtrados para la sesión
+            answers: {}, // Guardará { caseId: { selectedOptionIndex, score } }
+            startTime: null,
+            endTime: null,
+            score: 0,
+            currentScreen: 'welcome'
+        };
+
+        // --- INICIALIZACIÓN ---
+        window.onload = function() {
+            lucide.createIcons();
+            const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('cert-date').innerText = new Date().toLocaleDateString('es-ES', optionsDate);
+            selectRoleFilter('coordinador'); // Iniciar con Coordinador seleccionado por defecto
+        };
+
+        // --- MANEJO DE ALERTAS PERSONALIZADAS ---
+        function showCustomAlert(title, text, type = 'error') {
+            document.getElementById('alert-modal-title').innerText = title;
+            document.getElementById('alert-modal-text').innerText = text;
+            const iconBg = document.getElementById('alert-modal-icon-bg');
+            const icon = document.getElementById('alert-modal-icon');
+            
+            if (type === 'success') {
+                iconBg.className = "p-2 bg-emerald-100 text-emerald-700 rounded-xl shrink-0";
+                icon.setAttribute('data-lucide', 'check-circle-2');
+            } else if (type === 'warning') {
+                iconBg.className = "p-2 bg-amber-100 text-amber-750 rounded-xl shrink-0";
+                icon.setAttribute('data-lucide', 'help-circle');
+            } else {
+                iconBg.className = "p-2 bg-rose-100 text-rose-750 rounded-xl shrink-0";
+                icon.setAttribute('data-lucide', 'alert-triangle');
+            }
+            
+            document.getElementById('custom-alert-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeCustomAlert() {
+            document.getElementById('custom-alert-modal').classList.add('hidden');
+        }
+
+        // --- CONFIGURACIÓN DE MODOS Y FILTROS ---
+        function selectMode(selected) {
+            state.mode = selected;
+            const btnTraining = document.getElementById('mode-btn-training');
+            const btnEvaluation = document.getElementById('mode-btn-evaluation');
+            
+            if (selected === 'training') {
+                btnTraining.className = "relative text-left p-4 rounded-2xl border-2 border-teal-600 bg-teal-50/50 hover:bg-teal-50 transition group flex flex-col justify-between min-h-[9.5rem] h-auto";
+                btnEvaluation.className = "relative text-left p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-teal-600 hover:bg-slate-50/50 transition group flex flex-col justify-between min-h-[9.5rem] h-auto";
+                
+                document.getElementById('training-status').innerHTML = 'Seleccionado <i data-lucide="check-circle-2" class="w-3.5 h-3.5 ml-1"></i>';
+                document.getElementById('evaluation-status-btn-text').innerHTML = 'Hacer examen <i data-lucide="arrow-right" class="w-3.5 h-3.5 ml-1"></i>';
+            } else {
+                btnTraining.className = "relative text-left p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-teal-600 hover:bg-slate-50/50 transition group flex flex-col justify-between min-h-[9.5rem] h-auto";
+                btnEvaluation.className = "relative text-left p-4 rounded-2xl border-2 border-teal-600 bg-teal-50/50 hover:bg-teal-50 transition group flex flex-col justify-between min-h-[9.5rem] h-auto";
+                
+                document.getElementById('training-status').innerHTML = 'Practicar <i data-lucide="arrow-right" class="w-3.5 h-3.5 ml-1"></i>';
+                document.getElementById('evaluation-status-btn-text').innerHTML = 'Seleccionado <i data-lucide="check-circle-2" class="w-3.5 h-3.5 ml-1"></i>';
+            }
+            lucide.createIcons();
+        }
+
+        function selectRoleFilter(role) {
+            state.selectedRoleFilter = role;
+            const filters = ['coordinador', 'encuestador', 'cualitativo'];
+            filters.forEach(f => {
+                const btn = document.getElementById(`role-filter-${f}`);
+                if (f === role) {
+                    btn.className = "py-1.5 text-[10px] font-bold rounded-lg border text-center transition bg-teal-800 text-white border-teal-800 flex-1";
+                } else {
+                    btn.className = "py-1.5 text-[10px] font-bold rounded-lg border border-slate-200 text-slate-600 bg-white hover:bg-slate-50 transition flex-1";
+                }
+            });
+        }
+
+        // --- FLUJO DE LA SIMULACIÓN ---
+        function startSimulation() {
+            const nameInput = document.getElementById('user-name-input').value.trim();
+            const idInput = document.getElementById('user-id-input').value.trim();
+
+            if (nameInput === '') {
+                showCustomAlert('Registro Requerido', 'Por favor ingresa tu nombre completo para configurar tu sesión e iniciar el entrenamiento clínico.', 'warning');
+                return;
+            }
+
+            state.username = nameInput;
+            state.userId = idInput !== '' ? idInput : 'ANSV-' + Math.floor(Math.random() * 90000 + 10000);
+            
+            // Cargar los casos únicamente del rol correspondiente (Siempre filtrado, ya no existe 'all')
+            state.activeCases = casesDatabase.filter(c => c.role === state.selectedRoleFilter);
+
+            // Mezclar aleatoriamente en caso de evaluación
+            if (state.mode === 'evaluation') {
+                state.activeCases.sort(() => Math.random() - 0.5);
+            }
+
+            state.currentCaseIndex = 0;
+            state.answers = {};
+            state.score = 0;
+            state.startTime = new Date();
+
+            // Configurar badge de barra superior
+            document.getElementById('active-user-badge').classList.remove('hidden');
+            document.getElementById('active-user-badge').classList.add('flex');
+            document.getElementById('badge-username').innerText = state.username;
+
+            switchScreen('case-runner');
+            loadCase(0);
+        }
+
+        function switchScreen(screenId) {
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('case-runner-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('certificate-screen').classList.add('hidden');
+
+            if (screenId === 'welcome') {
+                document.getElementById('welcome-screen').classList.remove('hidden');
+            } else if (screenId === 'case-runner') {
+                document.getElementById('case-runner-screen').classList.remove('hidden');
+                document.getElementById('case-runner-screen').classList.add('flex');
+            } else if (screenId === 'results') {
+                document.getElementById('results-screen').classList.remove('hidden');
+                document.getElementById('results-screen').classList.add('flex');
+            } else if (screenId === 'certificate') {
+                document.getElementById('certificate-screen').classList.remove('hidden');
+                document.getElementById('certificate-screen').classList.add('flex');
+            }
+            state.currentScreen = screenId;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetToWelcome() {
+            document.getElementById('active-user-badge').classList.add('hidden');
+            document.getElementById('active-user-badge').classList.remove('flex');
+            switchScreen('welcome');
+        }
+
+        // --- CARGADOR DE CASOS ---
+        function loadCase(index) {
+            const currentCase = state.activeCases[index];
+            if (!currentCase) return;
+
+            // Actualizar datos de rol
+            const roleBadge = document.getElementById('runner-case-role');
+            const roleIcon = document.getElementById('runner-role-icon');
+            const roleIconContainer = document.getElementById('case-role-icon-container');
+            
+            if (currentCase.role === 'encuestador') {
+                roleBadge.innerText = 'Rol: Encuestador de Campo (Cuanti)';
+                roleBadge.className = "text-[10px] font-bold uppercase tracking-wider text-emerald-800";
+                roleIconContainer.className = "p-2.5 bg-emerald-50 rounded-xl text-emerald-700 shrink-0";
+                roleIcon.setAttribute('data-lucide', 'user-check');
+            } else if (currentCase.role === 'coordinador') {
+                roleBadge.innerText = 'Rol: Coordinador de Campo (Supervisión)';
+                roleBadge.className = "text-[10px] font-bold uppercase tracking-wider text-purple-800";
+                roleIconContainer.className = "p-2.5 bg-purple-50 rounded-xl text-purple-700 shrink-0";
+                roleIcon.setAttribute('data-lucide', 'shield-alert');
+            } else {
+                roleBadge.innerText = 'Rol: Equipo Cualitativo (Grupos/Entrevistas)';
+                roleBadge.className = "text-[10px] font-bold uppercase tracking-wider text-cyan-800";
+                roleIconContainer.className = "p-2.5 bg-cyan-50 rounded-xl text-cyan-700 shrink-0";
+                roleIcon.setAttribute('data-lucide', 'message-square');
+            }
+
+            // Inyectar ilustración vectorial SVG del caso
+            document.getElementById('illustration-container').innerHTML = currentCase.illustration || '';
+
+            // Actualizar textos
+            document.getElementById('runner-case-category').innerText = currentCase.category;
+            document.getElementById('runner-case-title').innerText = currentCase.title;
+            document.getElementById('runner-case-num').innerText = index + 1;
+            document.getElementById('runner-case-scenario').innerHTML = currentCase.scenario;
+            document.getElementById('runner-case-tip').innerText = currentCase.annex_tip;
+
+            // Dificultad
+            const diffBadge = document.getElementById('runner-difficulty-badge');
+            diffBadge.innerText = currentCase.difficulty;
+            if (currentCase.difficulty === 'Fácil') {
+                diffBadge.className = "text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 uppercase tracking-wider";
+            } else if (currentCase.difficulty === 'Media') {
+                diffBadge.className = "text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 uppercase tracking-wider";
+            } else {
+                diffBadge.className = "text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 uppercase tracking-wider";
+            }
+
+            // Progreso
+            const progressPercent = ((index + 1) / state.activeCases.length) * 100;
+            document.getElementById('runner-progress-bar').style.width = `${progressPercent}%`;
+            document.getElementById('runner-progress-text').innerText = `Caso ${index + 1}/${state.activeCases.length}`;
+            document.getElementById('runner-total-score').innerText = `${state.score} pts`;
+
+            // Mostrar u ocultar pistas según modo
+            const tipContainer = document.getElementById('annex-tip-container');
+            if (state.mode === 'training') {
+                tipContainer.classList.remove('hidden');
+                tipContainer.classList.add('flex');
+            } else {
+                tipContainer.classList.remove('flex');
+                tipContainer.classList.add('hidden');
+            }
+
+            renderOptions(currentCase, index);
+
+            // Control de navegación
+            const prevBtn = document.getElementById('prev-case-btn');
+            if (index === 0) {
+                prevBtn.classList.add('invisible');
+            } else {
+                prevBtn.classList.remove('invisible');
+            }
+
+            // Cambiar etiqueta de botón de envío
+            const actionBtn = document.getElementById('action-case-btn');
+            const alreadyAnswered = state.answers[currentCase.id] !== undefined;
+            
+            if (alreadyAnswered) {
+                if (index === state.activeCases.length - 1) {
+                    actionBtn.innerHTML = '<span>Ver Resultados</span> <i data-lucide="award" class="w-4 h-4"></i>';
+                } else {
+                    actionBtn.innerHTML = '<span>Siguiente caso</span> <i data-lucide="chevron-right" class="w-4 h-4"></i>';
+                }
+            } else {
+                actionBtn.innerHTML = '<span>Confirmar Acción</span> <i data-lucide="check" class="w-4 h-4"></i>';
+            }
+
+            lucide.createIcons();
+        }
+
+        // --- RENDERIZACIÓN DE OPCIONES ---
+        function renderOptions(currentCase, caseIndex) {
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            const answeredData = state.answers[currentCase.id];
+            const isAnswered = answeredData !== undefined;
+
+            currentCase.options.forEach((opt, idx) => {
+                const optButton = document.createElement('button');
+                optButton.type = 'button';
+                optButton.setAttribute('onclick', `selectOption(${idx})`);
+                optButton.id = `opt-card-${idx}`;
+                
+                let cardClasses = "w-full text-left p-3.5 rounded-xl border-2 transition flex items-start space-x-3 text-xs sm:text-sm whitespace-normal break-words h-auto min-h-[4.5rem] ";
+                
+                if (isAnswered) {
+                    optButton.disabled = true;
+                    if (idx === answeredData.selectedOptionIndex) {
+                        if (opt.score === 10) {
+                            cardClasses += "border-emerald-500 bg-emerald-50/70 text-emerald-950 shadow-sm";
+                        } else if (opt.score >= 5) {
+                            cardClasses += "border-amber-500 bg-amber-50/70 text-amber-950 shadow-sm";
+                        } else {
+                            cardClasses += "border-rose-500 bg-rose-50/70 text-rose-950 shadow-sm";
+                        }
+                    } else {
+                        cardClasses += "border-slate-150 bg-white text-slate-400 opacity-60";
+                    }
+                } else {
+                    cardClasses += "border-slate-200 bg-white hover:border-teal-500 hover:bg-slate-50 text-slate-700 shadow-sm";
+                }
+
+                optButton.className = cardClasses;
+
+                const letter = String.fromCharCode(65 + idx);
+                let badgeClasses = "w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ";
+                
+                if (isAnswered) {
+                    if (idx === answeredData.selectedOptionIndex) {
+                        if (opt.score === 10) badgeClasses += "bg-emerald-600 text-white";
+                        else if (opt.score >= 5) badgeClasses += "bg-amber-600 text-white";
+                        else badgeClasses += "bg-rose-600 text-white";
+                    } else {
+                        badgeClasses += "bg-slate-200 text-slate-400";
+                    }
+                } else {
+                    badgeClasses += "bg-slate-100 text-slate-600 group-hover:bg-teal-100 group-hover:text-teal-700";
+                }
+
+                optButton.innerHTML = `
+                    <span class="${badgeClasses}">${letter}</span>
+                    <span class="leading-relaxed flex-1 font-medium break-words text-slate-800">${opt.text}</span>
+                `;
+
+                container.appendChild(optButton);
+            });
+        }
+
+        let tempSelectedOptionIdx = null;
+
+        function selectOption(index) {
+            const currentCase = state.activeCases[state.currentCaseIndex];
+            if (state.answers[currentCase.id] !== undefined) return;
+
+            tempSelectedOptionIdx = index;
+
+            currentCase.options.forEach((opt, idx) => {
+                const card = document.getElementById(`opt-card-${idx}`);
+                if (idx === index) {
+                    card.className = "w-full text-left p-3.5 rounded-xl border-2 border-teal-600 bg-teal-50/30 text-teal-950 transition flex items-start space-x-3 text-xs sm:text-sm shadow-md whitespace-normal break-words h-auto min-h-[4.5rem]";
+                    card.querySelector('span:first-child').className = "w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs shrink-0 bg-teal-600 text-white";
+                } else {
+                    card.className = "w-full text-left p-3.5 rounded-xl border-2 border-slate-200 bg-white hover:border-teal-500 hover:bg-slate-50 text-slate-700 transition flex items-start space-x-3 text-xs sm:text-sm shadow-sm whitespace-normal break-words h-auto min-h-[4.5rem]";
+                    card.querySelector('span:first-child').className = "w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs shrink-0 bg-slate-100 text-slate-600";
+                }
+            });
+        }
+
+        // --- ENVIAR DECISIÓN ---
+        function submitCaseDecision() {
+            const currentCase = state.activeCases[state.currentCaseIndex];
+            const alreadyAnswered = state.answers[currentCase.id] !== undefined;
+
+            if (alreadyAnswered) {
+                if (state.currentCaseIndex === state.activeCases.length - 1) {
+                    finishSimulation();
+                } else {
+                    goToNextCase();
+                }
+                return;
+            }
+
+            if (tempSelectedOptionIdx === null) {
+                showCustomAlert('Acción Requerida', 'Analiza detalladamente la situación de campo y selecciona la opción de protocolo adecuada.', 'warning');
+                return;
+            }
+
+            const chosenOption = currentCase.options[tempSelectedOptionIdx];
+            
+            state.answers[currentCase.id] = {
+                selectedOptionIndex: tempSelectedOptionIdx,
+                score: chosenOption.score
+            };
+
+            state.score += chosenOption.score;
+            document.getElementById('runner-total-score').innerText = `${state.score} pts`;
+
+            // SI ES RESPUESTA CORRECTA (+10) DISPARAR CONFETI
+            if (chosenOption.score === 10) {
+                triggerConfettiBurst();
+            }
+
+            if (state.mode === 'training') {
+                // RENDERIZAR EN POPUP MODAL EN LUGAR DE PANEL LATERAL
+                showFeedbackModal(currentCase, tempSelectedOptionIdx);
+                renderOptions(currentCase, state.currentCaseIndex);
+            } else {
+                if (state.currentCaseIndex === state.activeCases.length - 1) {
+                    finishSimulation();
+                } else {
+                    goToNextCase();
+                }
+                tempSelectedOptionIdx = null;
+                return;
+            }
+
+            const actionBtn = document.getElementById('action-case-btn');
+            if (state.currentCaseIndex === state.activeCases.length - 1) {
+                actionBtn.innerHTML = '<span>Ver Resultados</span> <i data-lucide="award" class="w-4 h-4"></i>';
+            } else {
+                actionBtn.innerHTML = '<span>Siguiente caso</span> <i data-lucide="chevron-right" class="w-4 h-4"></i>';
+            }
+            tempSelectedOptionIdx = null;
+            lucide.createIcons();
+        }
+
+        // --- EFECTO DE CONFETI ---
+        function triggerConfettiBurst() {
+            confetti({
+                particleCount: 80,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        function triggerGrandCelebration() {
+            var duration = 3 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 }
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 }
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        // --- POPUP MODAL DE RETROALIMENTACIÓN ---
+        function showFeedbackModal(currentCase, selectedIndex) {
+            const feedbackModal = document.getElementById('feedback-modal');
+            const feedbackIconContainer = document.getElementById('feedback-modal-icon-bg');
+            const feedbackIcon = document.getElementById('feedback-modal-icon');
+            const feedbackTitle = document.getElementById('feedback-modal-title');
+            const feedbackText = document.getElementById('feedback-modal-text');
+            const nextBtnText = document.getElementById('feedback-modal-next-btn-text');
+
+            const option = currentCase.options[selectedIndex];
+
+            if (option.score === 10) {
+                feedbackIconContainer.className = "p-3 rounded-2xl bg-emerald-600 text-white shrink-0 shadow-lg animate-bounce";
+                feedbackIcon.setAttribute('data-lucide', 'check-circle-2');
+                feedbackTitle.className = "text-base sm:text-lg font-extrabold text-emerald-900 font-serif-title leading-tight";
+                feedbackTitle.innerText = "¡Criterio Excelente! (+10 Puntos)";
+            } else if (option.score >= 5) {
+                feedbackIconContainer.className = "p-3 rounded-2xl bg-amber-500 text-white shrink-0 shadow-lg";
+                feedbackIcon.setAttribute('data-lucide', 'help-circle');
+                feedbackTitle.className = "text-base sm:text-lg font-extrabold text-amber-900 font-serif-title leading-tight";
+                feedbackTitle.innerText = "Acción Parcial o con Riesgos (+5 Puntos)";
+            } else {
+                feedbackIconContainer.className = "p-3 rounded-2xl bg-rose-600 text-white shrink-0 shadow-lg animate-pulse";
+                feedbackIcon.setAttribute('data-lucide', 'alert-circle');
+                feedbackTitle.className = "text-base sm:text-lg font-extrabold text-rose-900 font-serif-title leading-tight";
+                feedbackTitle.innerText = "Infracción Crítica (0 Puntos)";
+            }
+
+            feedbackText.innerHTML = option.feedback;
+
+            if (state.currentCaseIndex === state.activeCases.length - 1) {
+                nextBtnText.innerText = "Ver Resultados";
+            } else {
+                nextBtnText.innerText = "Siguiente Caso";
+            }
+
+            feedbackModal.classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeFeedbackModal() {
+            document.getElementById('feedback-modal').classList.add('hidden');
+            if (state.currentCaseIndex === state.activeCases.length - 1) {
+                finishSimulation();
+            } else {
+                goToNextCase();
+            }
+        }
+
+        function goToNextCase() {
+            if (state.currentCaseIndex < state.activeCases.length - 1) {
+                state.currentCaseIndex++;
+                loadCase(state.currentCaseIndex);
+            }
+        }
+
+        function goToPrevCase() {
+            if (state.currentCaseIndex > 0) {
+                state.currentCaseIndex--;
+                loadCase(state.currentCaseIndex);
+            }
+        }
+
+        // --- TABLERO DE RESULTADOS ---
+        function finishSimulation() {
+            state.endTime = new Date();
+            const timeDiff = Math.floor((state.endTime - state.startTime) / 1000);
+            const minutes = Math.floor(timeDiff / 60);
+            const seconds = timeDiff % 60;
+
+            const totalPerfect = Object.values(state.answers).filter(ans => ans.score === 10).length;
+            const totalCritical = Object.values(state.answers).filter(ans => ans.score === 0).length;
+            
+            const maxScorePossible = state.activeCases.length * 10;
+            const scorePercentage = Math.round((state.score / maxScorePossible) * 100);
+
+            document.getElementById('results-total-score').innerText = `${state.score} / ${maxScorePossible} pts`;
+            document.getElementById('results-perfect-count').innerText = `${totalPerfect} / ${state.activeCases.length}`;
+            document.getElementById('results-time-elapsed').innerText = `${minutes}m ${seconds}s`;
+            document.getElementById('results-critical-fail-count').innerText = `${totalCritical} Infracci${totalCritical !== 1 ? 'ones' : 'ón'}`;
+
+            const strokeDashOffset = 251.2 - (251.2 * scorePercentage) / 100;
+            document.getElementById('metrics-circle-progress').style.strokeDashoffset = strokeDashOffset;
+            document.getElementById('metrics-percent-text').innerText = `${scorePercentage}%`;
+
+            const outcomeBadge = document.getElementById('evaluation-outcome-badge');
+            const certBtn = document.getElementById('download-certificate-btn');
+            
+            if (scorePercentage >= 80) {
+                outcomeBadge.innerText = 'Idóneo para Campo';
+                outcomeBadge.className = "px-4 py-1.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300";
+                certBtn.classList.remove('hidden');
+                certBtn.classList.add('flex');
+                
+                // CELEBRACIÓN DE VICTORIA FINAL
+                triggerGrandCelebration();
+            } else {
+                outcomeBadge.innerText = 'Requiere Refuerzo Metodológico';
+                outcomeBadge.className = "px-4 py-1.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300";
+                if (state.mode === 'evaluation') {
+                    certBtn.classList.add('hidden');
+                    certBtn.classList.remove('flex');
+                } else {
+                    certBtn.classList.remove('hidden');
+                    certBtn.classList.add('flex');
+                }
+            }
+
+            calculateCompetencies();
+            buildReviewList();
+            switchScreen('results');
+        }
+
+        // --- CÁLCULO DE COMPETENCIAS ---
+        function calculateCompetencies() {
+            const categories = {};
+            
+            state.activeCases.forEach(c => {
+                if (!categories[c.category]) {
+                    categories[c.category] = { total: 0, score: 0 };
+                }
+                const answer = state.answers[c.id];
+                categories[c.category].total += 10;
+                categories[c.category].score += answer ? answer.score : 0;
+            });
+
+            const compContainer = document.getElementById('competencies-container');
+            compContainer.innerHTML = '';
+
+            for (const [catName, data] of Object.entries(categories)) {
+                const percent = Math.round((data.score / data.total) * 100);
+                
+                let barColor = "bg-emerald-600";
+                let textColor = "text-emerald-700 bg-emerald-50 border-emerald-200";
+                if (percent < 50) {
+                    barColor = "bg-rose-600";
+                    textColor = "text-rose-700 bg-rose-50 border-rose-200";
+                } else if (percent < 80) {
+                    barColor = "bg-amber-500";
+                    textColor = "text-amber-700 bg-amber-50 border-amber-200";
+                }
+
+                const compCard = document.createElement('div');
+                compCard.className = "bg-white p-4 rounded-xl border border-slate-200 shadow-sm";
+                compCard.innerHTML = `
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-bold text-xs text-slate-700 uppercase tracking-wide">${catName}</span>
+                        <span class="text-xs font-extrabold px-2 py-0.5 rounded-md border ${textColor}">${percent}%</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-1.5">
+                        <div class="${barColor} h-1.5 rounded-full progress-bar-transition" style="width: ${percent}%"></div>
+                    </div>
+                `;
+                compContainer.appendChild(compCard);
+            }
+        }
+
+        // --- ACORDEÓN DE REVISIÓN ---
+        let reviewVisible = false;
+        function toggleCaseReview() {
+            const accordion = document.getElementById('cases-review-accordion');
+            reviewVisible = !reviewVisible;
+            if (reviewVisible) {
+                accordion.classList.remove('hidden');
+                accordion.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                accordion.classList.add('hidden');
+            }
+        }
+
+        function buildReviewList() {
+            const list = document.getElementById('review-list');
+            list.innerHTML = '';
+
+            state.activeCases.forEach((c, idx) => {
+                const answer = state.answers[c.id];
+                const chosenOption = c.options[answer.selectedOptionIndex];
+                
+                let borderClass = "border-emerald-200 bg-emerald-50/10";
+                let textClass = "text-emerald-800";
+                let badgeClass = "bg-emerald-100 text-emerald-800";
+                let scoreText = `${answer.score}/10 pts`;
+
+                if (answer.score === 0) {
+                    borderClass = "border-rose-200 bg-rose-50/10";
+                    textClass = "text-rose-800";
+                    badgeClass = "bg-rose-100 text-rose-800";
+                } else if (answer.score < 10) {
+                    borderClass = "border-amber-200 bg-amber-50/10";
+                    textClass = "text-amber-800";
+                    badgeClass = "bg-amber-100 text-amber-800";
+                }
+
+                // Generar descripción limpia del rol del caso para la lista
+                let cleanRoleLabel = "Encuestador";
+                if (c.role === "coordinador") cleanRoleLabel = "Coordinador de Campo";
+                else if (c.role === "cualitativo") cleanRoleLabel = "Equipo Cualitativo";
+
+                const reviewItem = document.createElement('div');
+                reviewItem.className = `p-4 sm:p-5 rounded-2xl border-2 ${borderClass} space-y-3`;
+                reviewItem.innerHTML = `
+                    <div class="flex justify-between items-start flex-wrap gap-2">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase text-slate-400">Caso ${idx + 1} • ${cleanRoleLabel} • ${c.category}</span>
+                            <h4 class="font-bold text-slate-900 text-xs sm:text-sm mt-0.5">${c.title}</h4>
+                        </div>
+                        <span class="text-xs font-extrabold px-2.5 py-1 rounded-full ${badgeClass}">${scoreText}</span>
+                    </div>
+                    <p class="text-xs text-slate-600 italic">"${c.scenario.replace(/<\/?[^>]+(>|$)/g, "")}"</p>
+                    <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs">
+                        <span class="block font-bold text-slate-700 mb-1">Acción declarada:</span>
+                        <p class="text-slate-600 leading-relaxed">${chosenOption.text}</p>
+                        <div class="mt-2 pt-2 border-t border-slate-100 text-slate-500 leading-relaxed">
+                            <strong class="text-slate-700 block mb-0.5">Diagnóstico Técnico:</strong>
+                            ${chosenOption.feedback}
+                        </div>
+                    </div>
+                `;
+                list.appendChild(reviewItem);
+            });
+        }
+
+        // --- EXPEDICIÓN DE CERTIFICADO DE IDONEIDAD ---
+        function openCertificate() {
+            document.getElementById('cert-user-name').innerText = state.username;
+            
+            const maxScorePossible = state.activeCases.length * 10;
+            const scorePercentage = Math.round((state.score / maxScorePossible) * 100);
+            document.getElementById('cert-score').innerText = `${state.score} / ${maxScorePossible} (${scorePercentage}%)`;
+            
+            const cleanName = state.username.replace(/[^a-zA-Z]/g, "").substring(0, 4).toUpperCase();
+            document.getElementById('cert-validation-code').innerText = `ANSV-${cleanName}-${state.userId}-${scorePercentage}`;
+
+            switchScreen('certificate');
+        }
+
+        function closeCertificate() {
+            switchScreen('results');
+        }
+
+        // --- SISTEMA DE EXPORTACIÓN A GOOGLE SHEETS (CSV & TSV) ---
+        function exportToGoogleSheetsCSV() {
+            try {
+                // Formatear la cadena CSV con codificación UTF-8 compatible y BOM para español
+                let csvContent = "\uFEFF"; // UTF-8 BOM para forzar compatibilidad de tildes/ñ en Excel/Google Sheets
+                csvContent += "Metrica,Valor\n";
+                csvContent += `Analista,"${state.username.replace(/"/g, '""')}"\n`;
+                csvContent += `ID de Campo,"${state.userId.replace(/"/g, '""')}"\n`;
+                csvContent += `Rol Evaluado,"${state.selectedRoleFilter.toUpperCase()}"\n`;
+                csvContent += `Fecha del Operativo,"${new Date().toLocaleDateString('es-ES')}"\n`;
+                csvContent += `Modo de Sesion,"${state.mode === 'training' ? 'Entrenamiento' : 'Evaluacion de Certificación'}"\n`;
+                
+                const maxScorePossible = state.activeCases.length * 10;
+                const scorePercentage = Math.round((state.score / maxScorePossible) * 100);
+                csvContent += `Puntaje Obtenido,"${state.score} de ${maxScorePossible} (${scorePercentage}%)"\n`;
+                
+                const timeDiff = Math.floor((state.endTime - state.startTime) / 1000);
+                csvContent += `Tiempo de Operacion,"${Math.floor(timeDiff / 60)} min ${timeDiff % 60} seg"\n\n`;
+                
+                csvContent += "Caso,Categoria,Titulo del Caso,Decision Declarada,Puntaje,Diagnostico de Campo,Referencia Tecnica\n";
+                
+                state.activeCases.forEach((c, idx) => {
+                    const ans = state.answers[c.id];
+                    const chosenOption = c.options[ans.selectedOptionIndex];
+                    const optionText = chosenOption.text.replace(/"/g, '""');
+                    const feedbackText = chosenOption.feedback.replace(/"/g, '""');
+                    csvContent += `${idx + 1},"${c.category.replace(/"/g, '""')}","${c.title.replace(/"/g, '""')}","${optionText}",${ans.score},"${feedbackText}","01_Guia_consentimiento_abordaje_manejo_novedades"\n`;
+                });
+
+                // Crear un Blob y disparar la descarga
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement("a");
+                const url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", `Clinica_Cascos_${state.selectedRoleFilter}_${state.username.replace(/\s+/g, '_')}.csv`);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                showCustomAlert('¡CSV Generado!', 'Se ha descargado el archivo CSV. Puedes subirlo directamente a Google Drive (Nuevo -> Subir Archivo -> Abrir con Hojas de cálculo de Google).', 'success');
+            } catch (err) {
+                showCustomAlert('Error de Exportación', 'Tu navegador bloqueó la descarga en este entorno. Por favor, utiliza la opción "Copiar para Google Sheets" para transferir tus datos de forma instantánea.', 'warning');
+            }
+        }
+
+        function copyToClipboardForSheets() {
+            let tabData = "Métrica\tValor\n";
+            tabData += `Analista\t${state.username}\n`;
+            tabData += `ID de Campo\t${state.userId}\n`;
+            tabData += `Rol Evaluado\t${state.selectedRoleFilter.toUpperCase()}\n`;
+            tabData += `Fecha del Operativo\t${new Date().toLocaleDateString('es-ES')}\n`;
+            
+            const maxScorePossible = state.activeCases.length * 10;
+            const scorePercentage = Math.round((state.score / maxScorePossible) * 100);
+            tabData += `Puntaje Obtenido\t${state.score} de ${maxScorePossible} (${scorePercentage}%)\n`;
+            
+            const timeDiff = Math.floor((state.endTime - state.startTime) / 1000);
+            tabData += `Tiempo de Operación\t${Math.floor(timeDiff / 60)}m ${timeDiff % 60}s\n\n`;
+            
+            tabData += "Nro Caso\tCategoría de Caso\tTítulo de Situación\tDecisión Tomada\tPuntos\tDiagnóstico Técnico de Campo\tReferencia Documental\n";
+            
+            state.activeCases.forEach((c, idx) => {
+                const ans = state.answers[c.id];
+                const chosenOption = c.options[ans.selectedOptionIndex];
+                const optionText = chosenOption.text;
+                const feedbackText = chosenOption.feedback;
+                tabData += `${idx + 1}\t${c.category}\t${c.title}\t${optionText}\t${ans.score}\t${feedbackText}\t01_Guia_consentimiento_abordaje_manejo_novedades\n`;
+            });
+
+            // Usar un Textarea temporal para copiar de manera 100% compatible con iFrames
+            const textarea = document.createElement('textarea');
+            textarea.value = tabData;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                const success = document.execCommand('copy');
+                if (success) {
+                    showCustomAlert('¡Copiado con Éxito!', 'Los datos de la clínica están listos. Abre una hoja de cálculo en Google Sheets, selecciona la celda A1 y presiona Ctrl + V (o Cmd + V) para pegar la tabla perfectamente alineada.', 'success');
+                } else {
+                    throw new Error("execCommand falló");
+                }
+            } catch (err) {
+                showCustomAlert('Error al Copiar', 'Tu navegador no permitió copiar los datos automáticamente. Por favor descarga el archivo CSV en su lugar.', 'error');
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+    </script>
+</body>
+</html>
